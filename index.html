@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Taiwanese Referendum 2018: Proposal 14 Same Sex Marriage</title>
+    <meta charset="utf-8" />
+
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.0.0/build/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@3.0.0-rc14/build/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@3.29.1/build/vega-embed.js"></script>
+
+    <style media="screen">
+      /* Add space between Vega-Embed links  */
+      .vega-actions a {
+        margin-right: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <p>This is my assignment of IS590 Advanced Data Visualization at UIUC.</p>
+    <p>The visualization is Taiwan's referendum result of proposal 14 "Do you agree that the right of same-sex couples getting married should be regulated under the Civil Code?" along with some demographic statistics by township.</p>
+    <p>You can select the vote share range on the histogram on the top chart to highlight corresponding numbers.</p>
+    <p>The heatmap allows you to understand how many voters in total in your selected range.</p>
+    <!-- Container for the visualization -->
+    <div id="vis"></div>
+
+    <script>
+      // Assign the specification to a local variable vlSpec.
+      var vlSpec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
+  "description": "Taiwanese Referendum 2018: Proposal 14 Same Sex Marriage",
+  "data": {
+    "url": "https://raw.githubusercontent.com/rfrd-tw/rfrd-tw.github.io/master/en/data/data_en.csv"
+  },
+  "title": {
+    "text": "Taiwanese Referendum 2018: Proposal 14 Same Sex Marriage",
+    "fontSize": 16
+  },
+  "vconcat": [
+    {
+      "layer": [
+        {
+          "width": 450,
+          "height": 120,
+          "mark": "bar",
+          "selection": {
+            "brush": {
+              "type": "interval",
+              "encodings": [
+                "x"
+              ]
+            }
+          },
+          "encoding": {
+            "x": {
+              "bin": true,
+              "field": "vote14",
+              "type": "quantitative",
+              "axis": {
+                "labelAngle": -40,
+                "title": "Agree (%)"
+              }
+            },
+            "y": {
+              "aggregate": "count",
+              "type": "quantitative",
+              "axis": {
+                "title": "Number of Districts"
+              }
+            }
+          }
+        },
+        {
+          "transform": [
+            {
+              "filter": {
+                "selection": "brush"
+              }
+            }
+          ],
+          "mark": "bar",
+          "encoding": {
+            "x": {
+              "field": "vote14",
+              "bin": true,
+              "type": "quantitative"
+            },
+            "y": {
+              "aggregate": "count",
+              "type": "quantitative"
+            },
+            "color": {
+              "value": "pink"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "spacing": 80,
+      "bounds": "flush",
+      "hconcat": [
+        {
+          "layer": [
+            {
+              "mark": "point",
+              "encoding": {
+                "x": {
+                  "field": "vote14",
+                  "type": "quantitative",
+                  "scale": {
+                    "domain": [
+                      0.1,
+                      0.5
+                    ]
+                  },
+                  "axis": {
+                    "title": "Agree (%)"
+                  }
+                },
+                "y": {
+                  "field": "College Degree (%)",
+                  "type": "quantitative"
+                },
+                "color": {
+                  "condition": {
+                    "selection": "brush",
+                    "value": "pink"
+                  },
+                  "value": "lightgrey"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "layer": [
+            {
+              "mark": "rect",
+              "transform": [
+                {
+                  "filter": {
+                    "selection": "brush"
+                  }
+                }
+              ],
+              "encoding": {
+                "x": {
+                  "bin": {
+                    "maxbins": 31
+                  },
+                  "field": "vote14",
+                  "type": "quantitative",
+                  "axis": {
+                    "title": "Agree (%)"
+                  }
+                },
+                "y": {
+                  "bin": {
+                    "maxbins": 25
+                  },
+                  "field": "Valid Voters",
+                  "type": "quantitative"
+                },
+                "color": {
+                  "aggregate": "sum",
+                  "field": "Valid Voters",
+                  "type": "quantitative"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "spacing": 80,
+      "bounds": "flush",
+      "hconcat": [
+        {
+          "layer": [
+            {
+              "mark": "point",
+              "encoding": {
+                "x": {
+                  "field": "vote14",
+                  "type": "quantitative",
+                  "scale": {
+                    "domain": [
+                      0.1,
+                      0.5
+                    ]
+                  },
+                  "axis": {
+                    "title": "Agree (%)"
+                  }
+                },
+                "y": {
+                  "field": "Median Age",
+                  "type": "quantitative",
+                  "scale": {
+                    "domain": [
+                      30,
+                      60
+                    ]
+                  }
+                },
+                "color": {
+                  "condition": {
+                    "selection": "brush",
+                    "value": "pink"
+                  },
+                  "value": "lightgrey"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "layer": [
+            {
+              "mark": "point",
+              "encoding": {
+                "x": {
+                  "field": "vote14",
+                  "type": "quantitative",
+                  "scale": {
+                    "domain": [
+                      0.1,
+                      0.5
+                    ]
+                  },
+                  "axis": {
+                    "title": "Agree (%)"
+                  }
+                },
+                "y": {
+                  "field": "Median Income (10k NTD)",
+                  "type": "quantitative",
+                  "scale": {
+                    "domain": [
+                      40,
+                      110
+                    ]
+                  }
+                },
+                "color": {
+                  "condition": {
+                    "selection": "brush",
+                    "value": "pink"
+                  },
+                  "value": "lightgrey"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "resolve": {
+    "legend": {
+      "color": "independent",
+      "size": "independent"
+    }
+  }
+};
+
+      // Embed the visualization in the container with id `vis`
+      vegaEmbed('#vis', vlSpec);
+    </script>
+  </body>
+</html>
